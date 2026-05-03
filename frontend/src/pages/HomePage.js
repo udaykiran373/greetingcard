@@ -147,7 +147,7 @@ const HomePage = () => {
 
         {/* Category bar */}
         <CategoryBar
-          categories={categories}
+          categories={categories || ['All']}
           selected={selectedCategory}
           onSelect={handleCategorySelect}
         />
