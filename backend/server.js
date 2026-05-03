@@ -13,10 +13,13 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://greetingcard-lemon.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    if (!origin || origin === 'http://localhost:3000' || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
