@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
-import { FiX, FiStar, FiCheck, FiZap } from 'react-icons/fi';
+import { FiX, FiCheck, FiZap } from 'react-icons/fi';
 
 const PremiumModal = ({ isOpen, onClose }) => {
-  const { updateUser, user } = useAuth();
+  const { updateUser } = useAuth();
   const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState('yearly');
   const [loading, setLoading] = useState(false);

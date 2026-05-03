@@ -2,6 +2,42 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { FiStar, FiShare2, FiDownload } from 'react-icons/fi';
 
+const parseGradientColors = (gradientString) => {
+  if (!gradientString) return ['#e11d48', '#fbbf24'];
+
+  const linearMatch = gradientString.match(/linear-gradient\(([^)]+)\)/i);
+  if (linearMatch) {
+    const parts = linearMatch[1].split(/,(?![^()]*\))/).map(p => p.trim());
+    const colors = parts.filter(part => !/^\s*(?:to |[0-9.]+deg|[0-9.]+rad|[0-9.]+grad|[0-9.]+turn)/i.test(part));
+    if (colors.length >= 2) {
+      return [colors[0], colors[colors.length - 1]];
+    }
+    if (colors.length === 1) {
+      return [colors[0], colors[0]];
+    }
+  }
+
+  const colors = gradientString.match(/#([0-9a-f]{3,6})|rgba?\([^)]+\)/gi);
+  if (colors && colors.length >= 2) {
+    return [colors[0], colors[1]];
+  }
+
+  const commaColors = gradientString.split(/,(?![^()]*\))/).map(p => p.trim()).filter(Boolean);
+  if (commaColors.length >= 2) {
+    return [commaColors[0], commaColors[commaColors.length - 1]];
+  }
+
+  return ['#e11d48', '#fbbf24'];
+};
+
+const createCanvasGradient = (ctx, width, height, gradientString) => {
+  const [startColor, endColor] = parseGradientColors(gradientString);
+  const grad = ctx.createLinearGradient(0, 0, width, height);
+  grad.addColorStop(0, startColor);
+  grad.addColorStop(1, endColor);
+  return grad;
+};
+
 const TemplateCard = ({ template, onPremiumClick, onShare }) => {
   const { user } = useAuth();
   const canvasRef = useRef(null);
@@ -9,41 +45,7 @@ const TemplateCard = ({ template, onPremiumClick, onShare }) => {
 
   const isPremiumLocked = template.isPremium && !user?.isPremium;
 
-  const parseGradientColors = (gradientString) => {
-    if (!gradientString) return ['#e11d48', '#fbbf24'];
 
-    const linearMatch = gradientString.match(/linear-gradient\(([^)]+)\)/i);
-    if (linearMatch) {
-      const parts = linearMatch[1].split(/,(?![^()]*\))/).map(p => p.trim());
-      const colors = parts.filter(part => !/^\s*(?:to |[0-9.]+deg|[0-9.]+rad|[0-9.]+grad|[0-9.]+turn)/i.test(part));
-      if (colors.length >= 2) {
-        return [colors[0], colors[colors.length - 1]];
-      }
-      if (colors.length === 1) {
-        return [colors[0], colors[0]];
-      }
-    }
-
-    const colors = gradientString.match(/#([0-9a-f]{3,6})|rgba?\([^\)]+\)/gi);
-    if (colors && colors.length >= 2) {
-      return [colors[0], colors[1]];
-    }
-
-    const commaColors = gradientString.split(/,(?![^()]*\))/).map(p => p.trim()).filter(Boolean);
-    if (commaColors.length >= 2) {
-      return [commaColors[0], commaColors[commaColors.length - 1]];
-    }
-
-    return ['#e11d48', '#fbbf24'];
-  };
-
-  const createCanvasGradient = (ctx, width, height, gradientString) => {
-    const [startColor, endColor] = parseGradientColors(gradientString);
-    const grad = ctx.createLinearGradient(0, 0, width, height);
-    grad.addColorStop(0, startColor);
-    grad.addColorStop(1, endColor);
-    return grad;
-  };
 
   const drawWrappedText = (ctx, text, x, y, maxWidth, lineHeight) => {
     const words = text.split(' ');

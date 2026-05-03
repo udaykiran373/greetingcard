@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiUser, FiLogOut, FiStar, FiMenu, FiX } from 'react-icons/fi';
+import { FiUser, FiLogOut, FiStar } from 'react-icons/fi';
 
 const Navbar = ({ onPremiumClick }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => { logout(); navigate('/login'); };
 

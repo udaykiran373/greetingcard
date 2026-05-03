@@ -7,7 +7,7 @@ import CategoryBar from '../components/Home/CategoryBar';
 import TemplateCard from '../components/Card/TemplateCard';
 import PremiumModal from '../components/Premium/PremiumModal';
 import ShareModal from '../components/Card/ShareModal';
-import { FiSearch, FiTrendingUp, FiGrid } from 'react-icons/fi';
+import { FiSearch, FiTrendingUp } from 'react-icons/fi';
 
 const HomePage = () => {
   const { user } = useAuth();
