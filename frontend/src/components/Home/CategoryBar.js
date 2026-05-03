@@ -35,7 +35,6 @@ const CategoryBar = ({ categories, selected, onSelect }) => {
               flexShrink: 0,
               padding: '8px 16px',
               borderRadius: 24,
-              border: 'none',
               cursor: 'pointer',
               fontFamily: 'Poppins',
               fontWeight: selected === cat ? 600 : 400,
